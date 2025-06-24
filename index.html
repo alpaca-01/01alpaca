@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solicitá tu usuario | Alpaca</title>
   <style>
-    /* Estilos breves (puedes copiar los tuyos) */
     body {
+      margin: 0;
+      padding: 0;
       background-color: #111b21;
       color: #e1e1e1;
       font-family: 'Segoe UI', sans-serif;
@@ -15,10 +16,23 @@
       align-items: center;
       justify-content: flex-start;
       height: 100vh;
-      margin: 0;
-      padding: 20px;
       text-align: center;
     }
+
+    header {
+      padding: 20px;
+    }
+
+    img.logo {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
     .chat-container {
       background-color: #0b141a;
       width: 100%;
@@ -31,38 +45,44 @@
       justify-content: space-between;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
+
     .messages {
       flex-grow: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 10px;
     }
+
     .message {
       padding: 10px;
       border-radius: 10px;
       max-width: 80%;
     }
+
     .bot {
       background-color: #202c33;
       align-self: flex-start;
     }
+
     .user {
       background-color: #25D366;
       color: #111b21;
       align-self: flex-end;
     }
+
     .input-area {
       display: flex;
       gap: 8px;
     }
+
     input[type="text"] {
       flex-grow: 1;
       padding: 10px;
       border: none;
       border-radius: 8px;
     }
+
     button {
       background-color: #25D366;
       color: #111b21;
@@ -72,6 +92,7 @@
       border-radius: 8px;
       cursor: pointer;
     }
+
     .btn-wsp {
       background-color: #25D366;
       color: #111b21;
@@ -82,14 +103,23 @@
       display: inline-block;
       text-decoration: none;
     }
+
+    footer {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: #8899a6;
+    }
   </style>
 </head>
 <body>
-  <h1>Solicitá tu usuario en Alpaca</h1>
+  <header>
+    <img src="logo_solo-sinbg.png" alt="Alpaca Logo" class="logo" />
+    <h1>Solicitá tu usuario en Alpaca</h1>
+  </header>
 
   <div class="chat-container">
     <div class="messages" id="messages">
-      <div class="message bot">Hola! ¡Bienvenido a Alpacabet! Decime un nombre para crear tu usuario!</div>
+      <div class="message bot">Hola! ¡Bienvenido a Alpaca! ¿Cómo te llamás para crear tu usuario?</div>
     </div>
     <div class="input-area">
       <input type="text" id="userInput" placeholder="Escribí tu nombre..." />
@@ -97,17 +127,10 @@
     </div>
   </div>
 
-  <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbxTuOSrgQ9FOBgRhQ7WQ80SqDsSQpAG5PPveC34j3-mPPsOqytEOAd18ZkSpI7nezkK6A/exec';
+  <footer>© 2025 Alpaca</footer>
 
-    function addMessage(text, sender) {
-      const msgContainer = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = 'message ' + sender;
-      div.innerHTML = text;
-      msgContainer.appendChild(div);
-      msgContainer.scrollTop = msgContainer.scrollHeight;
-    }
+  <script>
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzpJoc55AsF0UbOlP88SRzKwsAcJ7FZnsFPm-1qdx97DlpZ9Fjsiwrn8xWwPVYxlRZVKg/exec';
 
     function handleUserInput() {
       const input = document.getElementById('userInput');
@@ -122,7 +145,7 @@
       if (!soloLetras.test(nombreLimpio) || esInvalido || nombreLimpio.length < 3 || nombreLimpio.split(' ').length > 2) {
         addMessage(msg, 'user');
         setTimeout(() => {
-          addMessage('Decime solo tu <strong>nombre real</strong>? Asi creamos un usuario automáticamente.', 'bot');
+          addMessage('Decime solo tu <strong>nombre real</strong> Asi creamos un usuario automáticamente.', 'bot');
         }, 500);
         input.value = '';
         return;
@@ -138,17 +161,12 @@
 
       fetch(scriptUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ baseUsuario, nombre: msg })
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: msg, baseUsuario: baseUsuario })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(datos => {
-        if (datos.error) {
-          addMessage('Hubo un error en el servidor: ' + datos.error, 'bot');
-          return;
-        }
         const usuarioGenerado = datos.usuario;
         const claveGenerada = datos.clave;
 
@@ -159,7 +177,7 @@
             addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
 
             setTimeout(() => {
-              addMessage(`📤 Enviá tu comprobante a nuestro Whatsapp de soporte.`, 'bot');
+              addMessage(`📤 Enviá el comprobante a nuestro soporte de Whatsapp.`, 'bot');
 
               setTimeout(() => {
                 const wspBtn = document.createElement('a');
@@ -174,9 +192,19 @@
           }, 1000);
         }, 1000);
       })
-      .catch(error => {
-        addMessage('Error de conexión: ' + error.message, 'bot');
+      .catch(err => {
+        console.error('Error de conexión:', err);
+        addMessage('❌ Hubo un problema al crear tu usuario. Intentá nuevamente más tarde.', 'bot');
       });
+    }
+
+    function addMessage(text, sender) {
+      const msgContainer = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message ' + sender;
+      div.innerHTML = text;
+      msgContainer.appendChild(div);
+      msgContainer.scrollTop = msgContainer.scrollHeight;
     }
   </script>
 </body>
