@@ -166,7 +166,7 @@
       const mes = String(hoy.getMonth() + 1).padStart(2, '0');
       const baseUsuario = nombreLimpio.replace(/\s+/g, '') + dia + mes;
 
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbznseswV8AT8z_0C-G1PHVOvK8qWnSaiO2dHzM0XoYSObLq3c4K9_SNU2z71gGZGbtafg/exec';
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbwZoGdlpJfaDwaP2MH94xv1M3sQRe5eihzJSgRd_LSfW0JhwAt_2NZKzKjGOhN7wGdi/exec';
       const url = `${scriptURL}?baseUsuario=${baseUsuario}&nombre=${encodeURIComponent(msg)}`;
 
       fetch(url)
