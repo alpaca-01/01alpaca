@@ -130,7 +130,14 @@
   <footer>© 2025 Alpaca</footer>
 
   <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzpJoc55AsF0UbOlP88SRzKwsAcJ7FZnsFPm-1qdx97DlpZ9Fjsiwrn8xWwPVYxlRZVKg/exec';
+    function addMessage(text, sender) {
+      const msgContainer = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message ' + sender;
+      div.innerHTML = text;
+      msgContainer.appendChild(div);
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+    }
 
     function handleUserInput() {
       const input = document.getElementById('userInput');
@@ -145,7 +152,7 @@
       if (!soloLetras.test(nombreLimpio) || esInvalido || nombreLimpio.length < 3 || nombreLimpio.split(' ').length > 2) {
         addMessage(msg, 'user');
         setTimeout(() => {
-          addMessage('Decime solo tu <strong>nombre real</strong> Asi creamos un usuario automáticamente.', 'bot');
+          addMessage('¿Podés decirme solo tu <strong>nombre real</strong>? Necesitamos crearte un usuario automáticamente.', 'bot');
         }, 500);
         input.value = '';
         return;
@@ -159,52 +166,41 @@
       const mes = String(hoy.getMonth() + 1).padStart(2, '0');
       const baseUsuario = nombreLimpio.replace(/\s+/g, '') + dia + mes;
 
-      fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: msg, baseUsuario: baseUsuario })
-      })
-      .then(res => res.json())
-      .then(datos => {
-        const usuarioGenerado = datos.usuario;
-        const claveGenerada = datos.clave;
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxuoqCgvVDoDEk_SLErU6TxnzOoYBQWxh4ZkWWL3PJjpFUqacYISyh9FSHAvmZCZ4LSNA/exec';
+      const url = `${scriptURL}?baseUsuario=${baseUsuario}&nombre=${encodeURIComponent(msg)}`;
 
-        setTimeout(() => {
-          addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
+      fetch(url)
+        .then(res => res.json())
+        .then(datos => {
+          const usuarioGenerado = datos.usuario;
+          const claveGenerada = datos.clave;
 
           setTimeout(() => {
-            addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
+            addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
 
             setTimeout(() => {
-              addMessage(`📤 Enviá el comprobante a nuestro soporte de Whatsapp.`, 'bot');
+              addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
 
               setTimeout(() => {
-                const wspBtn = document.createElement('a');
-                const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
-                wspBtn.href = wspLink;
-                wspBtn.target = '_blank';
-                wspBtn.innerText = 'Ir a WhatsApp del soporte';
-                wspBtn.className = 'btn-wsp';
-                document.getElementById('messages').appendChild(wspBtn);
+                addMessage(`📤 Una vez hecho, hacé clic en el botón de abajo para enviar el comprobante a nuestro soporte.`, 'bot');
+
+                setTimeout(() => {
+                  const wspBtn = document.createElement('a');
+                  const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
+                  wspBtn.href = wspLink;
+                  wspBtn.target = '_blank';
+                  wspBtn.innerText = 'Ir a WhatsApp del soporte';
+                  wspBtn.className = 'btn-wsp';
+                  document.getElementById('messages').appendChild(wspBtn);
+                }, 1000);
               }, 1000);
             }, 1000);
           }, 1000);
-        }, 1000);
-      })
-      .catch(err => {
-        console.error('Error de conexión:', err);
-        addMessage('❌ Hubo un problema al crear tu usuario. Intentá nuevamente más tarde.', 'bot');
-      });
-    }
-
-    function addMessage(text, sender) {
-      const msgContainer = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = 'message ' + sender;
-      div.innerHTML = text;
-      msgContainer.appendChild(div);
-      msgContainer.scrollTop = msgContainer.scrollHeight;
+        })
+        .catch(err => {
+          console.error('Error de conexión:', err);
+          addMessage('⚠️ Hubo un error conectando con el servidor. Intentá nuevamente en unos minutos.', 'bot');
+        });
     }
   </script>
 </body>
