@@ -114,12 +114,12 @@
 <body>
   <header>
     <img src="logo y letras oscuras.png" alt="Alpaca Logo" class="logo" />
-    <h1>Solicitá tu usuario en Alpaca</h1>
+    <h1>Pedi tu usuario en Alpacabet</h1>
   </header>
 
   <div class="chat-container">
     <div class="messages" id="messages">
-      <div class="message bot">Hola! ¡Bienvenido a Alpaca! ¿Cómo te llamás para crear tu usuario?</div>
+      <div class="message bot">Hola! Como es tu <strong>nombre</strong>? Asi te creo un usuario automaticamente</div>
     </div>
     <div class="input-area">
       <input type="text" id="userInput" placeholder="Escribí tu nombre..." />
@@ -127,7 +127,7 @@
     </div>
   </div>
 
-  <footer>© 2025 Alpaca</footer>
+  <footer>© 2025 Alpacabet</footer>
 
   <script>
     async function handleUserInput() {
@@ -135,7 +135,7 @@
       const msg = input.value.trim();
       if (!msg) return;
 
-      const palabrasInvalidas = ['hola', 'ok', 'buen dia', 'buenos dias', 'buenas', 'que tal', 'como estas', 'no se', 'ninguno'];
+      const palabrasInvalidas = ['hola', 'bien', 'ok', 'buen dia', 'buenos dias', 'buenas', 'que tal', 'como estas', 'no se', 'ninguno'];
       const nombreLimpio = msg.toLowerCase().replace(/[.,!?¡¿]/g, '').trim();
       const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/;
       const esInvalido = palabrasInvalidas.some(p => nombreLimpio.includes(p));
@@ -143,7 +143,7 @@
       if (!soloLetras.test(nombreLimpio) || esInvalido || nombreLimpio.length < 3 || nombreLimpio.split(' ').length > 2) {
         addMessage(msg, 'user');
         setTimeout(() => {
-          addMessage('¿Podés decirme solo tu <strong>nombre real</strong>? Necesitamos crearte un usuario automáticamente.', 'bot');
+          addMessage('Decime solo tu <strong>nombre</strong>, para crear el usuario automáticamente.', 'bot');
         }, 500);
         input.value = '';
         return;
@@ -171,7 +171,7 @@
             addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
 
             setTimeout(() => {
-              addMessage(`📤 Una vez hecho, hacé clic en el botón de abajo para enviar el comprobante a nuestro soporte.`, 'bot');
+              addMessage(`📤 Hacé clic en el botón de abajo para enviar el comprobante a nuestro soporte de Whatsapp, ellos te van a redirigir a la pagina de <strong>Alpacabet</strong>!.`, 'bot');
 
               setTimeout(() => {
                 const wspBtn = document.createElement('a');
