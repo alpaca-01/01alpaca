@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { baseUsuario, nombre } = req.query;
 
-  const url = `https://script.google.com/macros/s/AKfycbwZoGdlpJfaDwaP2MH94xv1M3sQRe5eihzJSgRd_LSfW0JhwAt_2NZKzKjGOhN7wGdi/exec?baseUsuario=${encodeURIComponent(baseUsuario)}&nombre=${encodeURIComponent(nombre)}`;
+  const url = `https://script.google.com/macros/s/AKfycbwKAfwGplbYFgv7IWAdiTLxFn-2GPrHedolzHzFwGHj-h-lSiwFidoVjBww-qqtAC_Npw/exec?baseUsuario=${encodeURIComponent(baseUsuario)}&nombre=${encodeURIComponent(nombre)}`;
 
   try {
     const response = await fetch(url);
