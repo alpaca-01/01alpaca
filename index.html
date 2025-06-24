@@ -130,16 +130,7 @@
   <footer>© 2025 Alpaca</footer>
 
   <script>
-    function addMessage(text, sender) {
-      const msgContainer = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = 'message ' + sender;
-      div.innerHTML = text;
-      msgContainer.appendChild(div);
-      msgContainer.scrollTop = msgContainer.scrollHeight;
-    }
-
-    function handleUserInput() {
+    async function handleUserInput() {
       const input = document.getElementById('userInput');
       const msg = input.value.trim();
       if (!msg) return;
@@ -166,41 +157,47 @@
       const mes = String(hoy.getMonth() + 1).padStart(2, '0');
       const baseUsuario = nombreLimpio.replace(/\s+/g, '') + dia + mes;
 
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbwZoGdlpJfaDwaP2MH94xv1M3sQRe5eihzJSgRd_LSfW0JhwAt_2NZKzKjGOhN7wGdi/exec';
-      const url = `${scriptURL}?baseUsuario=${baseUsuario}&nombre=${encodeURIComponent(msg)}`;
+      try {
+        const response = await fetch(`/api/proxy?baseUsuario=${baseUsuario}&nombre=${msg}`);
+        const datos = await response.json();
 
-      fetch(url)
-        .then(res => res.json())
-        .then(datos => {
-          const usuarioGenerado = datos.usuario;
-          const claveGenerada = datos.clave;
+        const usuarioGenerado = datos.usuario;
+        const claveGenerada = datos.clave;
+
+        setTimeout(() => {
+          addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
 
           setTimeout(() => {
-            addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
+            addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
 
             setTimeout(() => {
-              addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
+              addMessage(`📤 Una vez hecho, hacé clic en el botón de abajo para enviar el comprobante a nuestro soporte.`, 'bot');
 
               setTimeout(() => {
-                addMessage(`📤 Una vez hecho, hacé clic en el botón de abajo para enviar el comprobante a nuestro soporte.`, 'bot');
-
-                setTimeout(() => {
-                  const wspBtn = document.createElement('a');
-                  const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
-                  wspBtn.href = wspLink;
-                  wspBtn.target = '_blank';
-                  wspBtn.innerText = 'Ir a WhatsApp del soporte';
-                  wspBtn.className = 'btn-wsp';
-                  document.getElementById('messages').appendChild(wspBtn);
-                }, 1000);
+                const wspBtn = document.createElement('a');
+                const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
+                wspBtn.href = wspLink;
+                wspBtn.target = '_blank';
+                wspBtn.innerText = 'Ir a WhatsApp del soporte';
+                wspBtn.className = 'btn-wsp';
+                document.getElementById('messages').appendChild(wspBtn);
               }, 1000);
             }, 1000);
           }, 1000);
-        })
-        .catch(err => {
-          console.error('Error de conexión:', err);
-          addMessage('⚠️ Hubo un error conectando con el servidor. Intentá nuevamente en unos minutos.', 'bot');
-        });
+        }, 1000);
+      } catch (error) {
+        console.error('Error de conexión:', error);
+        addMessage('❌ Hubo un error al procesar tu solicitud. Por favor, intentá de nuevo más tarde.', 'bot');
+      }
+    }
+
+    function addMessage(text, sender) {
+      const msgContainer = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message ' + sender;
+      div.innerHTML = text;
+      msgContainer.appendChild(div);
+      msgContainer.scrollTop = msgContainer.scrollHeight;
     }
   </script>
 </body>
