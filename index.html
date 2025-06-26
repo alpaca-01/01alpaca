@@ -38,7 +38,6 @@
       margin-bottom: 10px;
     }
 
-
     h1 {
       font-size: 1.5rem;
       margin: 0;
@@ -212,22 +211,23 @@
         setTimeout(() => {
           addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
 
-          /* setTimeout(() => {
+          /*
+          setTimeout(() => {
             addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
-          }, 1000); */
+          }, 1000);
+          */
+
+          setTimeout(() => {
+            addMessage(`📤 Hacé clic en el Whatsapp de abajo para que nuestro soporte te ayude con tu deposito, y despues a <strong>JUGAR!</strong>.`, 'bot');
 
             setTimeout(() => {
-              addMessage(`📤 Hacé clic en el Whatsapp de abajo para que nuestro soporte te ayude con tu deposito, y despues a <strong>JUGAR!</strong>.`, 'bot');
-
-              setTimeout(() => {
-                const wspBtn = document.createElement('a');
-                const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
-                wspBtn.href = wspLink;
-                wspBtn.target = '_blank';
-                wspBtn.innerText = 'Ir a WhatsApp del soporte';
-                wspBtn.className = 'btn-wsp';
-                document.getElementById('messages').appendChild(wspBtn);
-              }, 1000);
+              const wspBtn = document.createElement('a');
+              const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
+              wspBtn.href = wspLink;
+              wspBtn.target = '_blank';
+              wspBtn.innerText = 'Ir a WhatsApp del soporte';
+              wspBtn.className = 'btn-wsp';
+              document.getElementById('messages').appendChild(wspBtn);
             }, 1000);
           }, 1000);
         }, 1000);
