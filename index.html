@@ -30,10 +30,10 @@
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      object-fit: contain; /* antes era 'cover', ahora ajusta el contenido dentro del círculo */
+      object-fit: contain;
       background-color: #151F2C;
       border: 3px solid #25D366;
-      padding: 5px; /* da espacio interior para que no se vea tan grande */
+      padding: 5px;
       box-sizing: border-box;
       margin-bottom: 10px;
     }
@@ -71,7 +71,7 @@
       background-color: #0b141a;
       width: 100%;
       max-width: 360px;
-      height: 450px; /* bajé de 500px a 450px para que no sea tan alto */
+      height: 520px; /* un poco más alto para el botón */
       border-radius: 12px;
       padding: 16px;
       display: flex;
@@ -79,14 +79,6 @@
       justify-content: space-between;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-
-    /* Responsividad para pantallas más pequeñas */
-    @media (max-width: 400px) {
-      .chat-container {
-      height: 350px; /* un poco más pequeño aún en celulares muy chicos */
-      max-width: 100%;
-    }
-  }
 
     .messages {
       flex-grow: 1;
@@ -149,6 +141,8 @@
       margin-bottom: 20px;
       display: inline-block;
       text-decoration: none;
+      max-width: 360px;
+      word-break: break-word;
     }
 
     footer {
@@ -219,23 +213,22 @@
         setTimeout(() => {
           addMessage(`Listo ${msg}, tu usuario es: <strong>${usuarioGenerado}</strong><br>🔐 Clave: <strong>${claveGenerada}</strong><br><em>(Podés cambiarla luego desde tu panel)</em>`, 'bot');
 
-          /*
-          setTimeout(() => {
+          /* setTimeout(() => {
             addMessage(`💸 Para cargar saldo transferí a este CBU:<br><strong>0000003100017022726544</strong><br>(a nombre de VIAE OBRAS)`, 'bot');
-          }, 1000);
-          */
+          }, 1000); */
 
           setTimeout(() => {
-            addMessage(`📤 Hacé clic en el Whatsapp de abajo para que nuestro soporte te ayude con tu deposito, y despues a <strong>JUGAR!</strong>.`, 'bot');
+            addMessage(`📤 Hacé clic en el Whatsapp de abajo para que nuestro soporte te ayude con tu deposito, y después a <strong>JUGAR!</strong>.`, 'bot');
 
             setTimeout(() => {
               const wspBtn = document.createElement('a');
-              const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Quiero jugar!. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\n`)}`;
+              const wspLink = `https://wa.me/5491168276688?text=${encodeURIComponent(`Hola! Ya hice la transferencia. Mis datos:\nNombre: ${msg}\nUsuario: ${usuarioGenerado}\nClave: ${claveGenerada}\nAdjunto el comprobante 👇`)}`;
               wspBtn.href = wspLink;
               wspBtn.target = '_blank';
               wspBtn.innerText = 'Ir a WhatsApp del soporte';
               wspBtn.className = 'btn-wsp';
               document.getElementById('messages').appendChild(wspBtn);
+              scrollToBottom(); // scroll cuando agregamos el botón
             }, 1000);
           }, 1000);
         }, 1000);
@@ -251,7 +244,14 @@
       div.className = 'message ' + sender;
       div.innerHTML = text;
       msgContainer.appendChild(div);
-      msgContainer.scrollTop = msgContainer.scrollHeight;
+      scrollToBottom();
+    }
+
+    function scrollToBottom() {
+      const msgContainer = document.getElementById('messages');
+      setTimeout(() => {
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }, 0);
     }
   </script>
 </body>
