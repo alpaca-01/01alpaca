@@ -71,7 +71,7 @@
       background-color: #0b141a;
       width: 100%;
       max-width: 360px;
-      height: 500px;
+      height: 400px; /* bajé de 500px a 400px para que no sea tan alto */
       border-radius: 12px;
       padding: 16px;
       display: flex;
@@ -79,6 +79,14 @@
       justify-content: space-between;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
+
+    /* Responsividad para pantallas más pequeñas */
+    @media (max-width: 400px) {
+      .chat-container {
+      height: 350px; /* un poco más pequeño aún en celulares muy chicos */
+      max-width: 100%;
+    }
+  }
 
     .messages {
       flex-grow: 1;
